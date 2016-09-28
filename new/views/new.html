@@ -1,0 +1,21 @@
+<div class="weui-panel weui-panel_access">
+	<div class="weui-panel__hd" style="color: red;font-size: 20px">新闻头条</div>
+	<div class="weui-panel__bd">
+		<a  class="weui-media-box weui-media-box_appmsg" ng-repeat="arr in arrs" ng-href="{{arr.url}}">
+			<div class="weui-media-box__hd" style="width: 100px;height: 100px">
+	                <img class="weui-media-box__thumb" ng-src="{{arr.picUrl}}" alt="">
+	        </div>
+			<div class="weui-media-box weui-media-box_text" >
+				<h4 class="weui-media-box__title">{{arr.title}}</h4>
+				<p class="weui-media-box__desc">{{arr.description}}&nbsp;{{arr.ctime}}</p>
+			</div>
+		</a>
+	
+	</div>
+	<div class="weui-panel__ft">
+		<a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link" ng-click="loadMore()">
+			<div class="weui-cell__bd">查看更多</div>
+			<span class="weui-cell__ft"></span>
+		</a>
+	</div>
+</div>

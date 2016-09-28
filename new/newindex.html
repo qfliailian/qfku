@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="wsscat">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<div ng-view=""></div>
+	</body>
+	<script src="js/angular.js"></script>
+	<script src="js/angular-route.js"></script>
+	<link rel="stylesheet" href="css/weui.css" />
+	<script>
+		var app = angular.module('wsscat', ['ngRoute']);
+		app.config(['$routeProvider', function($routeProvider) {
+			$routeProvider.when('/index', {
+				templateUrl: 'views/new.html',
+				controller: 'indexCtrl'
+			}).when('/home', {
+				templateUrl: 'views/home.html',
+				controller: 'homeCtrl'
+			}).otherwise({
+				redirectTo: '/index'
+			})
+		}])
+		app.controller('indexCtrl', function($scope, $rootScope, $http, $window) {
+			//默认请求的值
+			$scope.page = 1;
+			$scope.arrs = [];
+			var more = function(){
+				$http.get('new.php', {
+					params: {
+						callback: 'JSON_CALLBACK',
+						page: $scope.page,
+					}
+				}).success(function(data) {
+					$scope.results = data.newslist
+					$scope.arrs = $scope.arrs.concat(data.newslist)
+				})
+			}
+			
+			
+			//第一次进来时候请求数据
+			more()
+			//点击查看更多的时候触发请求数据
+			$scope.loadMore = function() {
+				$scope.page += 1
+				more()
+			}
+		})
+		
+		
+	</script>
+
+</html>
