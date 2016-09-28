@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>视频播放器</title>
+	<style>
+		*{margin: 0;padding: 0;list-style: none;text-decoration: none;}
+
+		.all{
+			width: 1000px;
+			margin: 0 auto;
+			margin-top: 30px;
+		}
+
+		video{
+			width: 1000px;
+			display: block;
+			margin:0 auto;
+		}
+
+		.box{
+			width: 1000px;
+			height: 47px;
+			background: url(src/img/bg.png) repeat-x;
+			bottom: 0;
+			left:0;
+		}
+
+		.box a{
+			float: left;
+		}
+
+		.box a img{
+			display: block;
+		}
+
+		.box div{
+			float: left;
+		}
+		.box .prev{
+			margin-left: 50px;
+			margin-top: 12px;
+		}
+
+		.box .play{
+			margin-left:12px;
+			margin-top: 6px;
+			width:36px;
+			overflow: hidden;
+		}
+
+		.box .next{
+			margin-left:12px;
+			margin-top: 12px;
+		}
+
+		.box .bar{
+			margin-left: 100px;
+			margin-top: 20px;
+			width: 458px;
+			height: 10px;
+			background: #191919;
+			border-radius: 4px;
+		}
+
+
+		.box .bar span img{
+			display: block;
+			position: absolute;
+			bottom: -4px;
+			right:-4px;
+		}
+
+		.box .bar span{
+			display: block;
+			height: 100%;
+			width: 0px;
+			background: #c70c0c;
+			border-radius: 4px;
+			position: relative;
+		}
+
+		.box .time{
+			margin-left: 12px;
+			margin-top: 26px;
+			font-size: 12px;
+			line-height: 12px;
+			height: 12px;
+			color:#fff;
+		}
+
+		.box .vol{
+			margin-left: 100px;
+			margin-top: 8px;
+		}
+
+		.box .loop{
+			margin-left: 20px;
+			margin-top: 14px;
+		}
+	</style>
+</head>
+<body>
+	<div class="all">
+		<video src="src/videos/mov_bbb.mp4" class="video"></video>
+
+		<div class="box">
+			<a href="javascript:" class="prev"><img src="src/img/prev.png" alt=""></a>
+			<a href="javascript:" class="play"><img src="src/img/play1.png" alt=""></a>
+			<a href="javascript:" class="next"><img src="src/img/next.png" alt=""></a>
+			<div class="bar">
+				<span><img src="src/img/circle.png" alt=""></span>
+			</div>
+			<div class="time">
+				<span class="curTime">00:00</span> /
+				<span class="fullTime">00:00</span>
+			</div>
+			<a href="javascript:" class="vol"><img src="src/img/vol.png" alt=""></a>
+			<a href="javascript:" class="loop"><img src="src/img/loop.png" alt=""></a>
+
+
+		</div>
+	</div>
+	
+</body>
+
+<script src="jquery-3.1.0.js"></script>
+<script>
+	var video = $('.video')[0];
+
+	$('.play').click(function(){
+		if(video.paused){
+			video.play();
+			$(this).find('img').attr('src','src/img/play.png');
+		}else{
+			video.pause();
+			$(this).find('img').attr('src','src/img/play1.png');
+		}
+	});
+
+	video.ontimeupdate = function(){
+		var fullTime = video.duration;
+		var fTime = changeTime(fullTime);
+		var curTime = video.currentTime;
+		var cTime = changeTime(curTime);
+		$('.curTime').html(cTime);
+		$('.fullTime').html(fTime);
+
+		var ratio = curTime / fullTime * 100 + "%";
+		$('.bar span').css('width',ratio);
+	}
+
+	video.onended = function(){
+		$('.bar span').css('width',0);
+		$('.play').find('img').attr('src','src/img/play1.png');
+	}
+
+	function changeTime(time){
+		var min = parseInt(time / 60);
+		var sec = parseInt(time % 60);
+		if(min < 10){
+			min = "0" + min;
+		}
+		if(sec < 10){
+			sec = "0" + sec;
+		}
+
+		return (min + ":" + sec);
+	}
+
+	$('.bar span img').mousedown(function(e){
+		e.stopPropagation();
+		
+		e = e || window.event;
+		var x1 = e.offsetX;
+		var x = $('.bar').offset().left;
+		$(document).mousemove(function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			e = e || window.event;
+			var x2 = e.clientX;
+			var w = x2 - x + x1;
+			if(w <= 0){
+				w = 0;
+			}
+			if(w >= $('.bar').width()){
+				w = $('.bar').width();
+			}
+			$('.bar span').css('width',w);
+
+			video.currentTime = (w / $('.bar').width())*video.duration;
+
+
+			$(document).mouseup(function(){
+				e.stopPropagation();
+				$(document).unbind('mousemove');
+				$(document).unbind('mouseup');
+				//video.play();
+				$('.play').find('img').attr('src','src/img/play.png');
+			});
+			
+		});
+	});
+
+	$('.bar').click(function(e){
+		e = e || window.event;
+		var x1 = e.offsetX;
+		$('.bar span').css('width',x1);
+		video.currentTime = (x1 / $('.bar').width())*video.duration;
+		video.play();
+		$('.play').find('img').attr('src','src/img/play.png');
+	});
+
+	$('.vol').click(function(){
+		if(video.muted){
+			video.muted = false;
+			$('.vol').find('img').attr('src',"src/img/vol.png");
+		}else{
+			video.muted = true;
+			$('.vol').find('img').attr('src',"src/img/novol.png");
+		}
+	});
+
+	
+</script>
+</html>

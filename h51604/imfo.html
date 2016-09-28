@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		table, td{
+			border: 1px solid #000;
+		}
+	</style>
+</head>
+<body>
+	<fieldset>
+		<legend>客户信息管理网页</legend>
+			<table>
+				<tr>
+					<td>姓名</td>
+					<td><input id="name" type="text"></td>
+				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td><input id="email" type="text"></td>
+				</tr>
+				<tr>
+					<td>电话</td>
+					<td><input id="tel" type="text"></td>
+				</tr>
+				<tr>
+					<td>备注</td>
+					<td><input id="remark" type="text"></td>
+				</tr>
+				<tr>
+					<td><button id="save">保存</button></td>
+				</tr>
+			</table>
+
+			<hr>
+
+			<div>根据姓名检索信息: <input id="s_name" type="text"><button id="search">检索</button></div>
+
+			<hr>
+			<br>
+
+			<div>姓名:<span id="r_name"></span></div>
+			<div>邮箱:<span id="r_email"></span></div>
+			<div>电话:<span id="r_tel"></span></div>
+			<div>备注:<span id="r_remark"></span></div>
+
+			<br>
+	</fieldset>
+
+
+	<script>
+		onload = function(){
+			var save = document.getElementById('save');
+			
+			var search = document.getElementById('search');
+
+			var rName = document.getElementById('r_name');
+			var rEmail = document.getElementById('r_email');
+			var rTel = document.getElementById('r_tel');
+			var rRemark = document.getElementById('r_remark');
+
+			var count = 0;
+
+			save.onclick = function(){
+				var oName = document.getElementById('name').value;
+				var oEmail = document.getElementById('email').value;
+				var oTel = document.getElementById('tel').value;
+				var oRemark = document.getElementById('remark').value;
+
+				var obj = {
+					name: oName,
+					email: oEmail,
+					tel: oTel,
+					remark: oRemark
+				};
+
+				obj = JSON.stringify(obj);
+
+				sessionStorage.setItem('client' + count, obj);
+
+				count++;
+
+				document.getElementById('name').value = "";
+				document.getElementById('email').value = "";
+				document.getElementById('tel').value = "";
+				document.getElementById('remark').value = "";
+			};
+
+			search.onclick = function(){
+				var s_name = document.getElementById('s_name').value;
+
+				for (i = 0; i < sessionStorage.length; i++) {
+					var names = JSON.parse(sessionStorage.getItem('client' + i)).name;
+					if (names == s_name) {
+						rName.innerHTML = names;
+						rEmail.innerHTML = JSON.parse(sessionStorage.getItem('client' + i)).email;
+						rTel.innerHTML = JSON.parse(sessionStorage.getItem('client' + i)).tel;
+						rRemark.innerHTML = JSON.parse(sessionStorage.getItem('client' + i)).remark;
+					}
+				}
+			}
+		}
+	</script>
+
+</body>
+</html>

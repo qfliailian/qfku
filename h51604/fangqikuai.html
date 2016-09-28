@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>小米手机时钟</title>
+    <style>
+        html,body,ul,li,canvas{
+            margin: 0;
+            padding: 0;
+        }
+        body,html{
+            width: 100vw; /* vw是根据屏幕大小来显示大小 view-width的缩写*/
+            height: 100vh;
+            line-height: 1.5;
+            overflow: hidden;
+            font-size: 14px;
+            font-family: "Microsoft Yahei";
+            background: #008171;
+        }
+        ul,li{
+            list-style: none;
+        }
+        a{
+            text-decoration: none;
+            color: #fff;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        header{
+            display: block;
+            height: 21px;
+        }
+        header .nav {
+            margin-top: 1vh;
+            margin-bottom: 2vh;
+            height: 100%;
+        }
+        .m0 {
+            margin: 0 auto;
+            height: 100%;
+        }
+        .row .col.offset-s1 {
+            margin-left: 8.3333333333%;
+        }
+        .row .col.s10 {
+            width: 83.3333333333%;
+            left: auto;
+            right: auto;
+        }
+        .row .col {
+            float: left;
+            box-sizing: border-box;
+            padding: 0 0.75rem;
+            min-height: 1px;
+        }
+        .row .col ul{
+            margin: 0 auto;
+            height: 21px;
+        }
+        .row .col.s3 {
+            width: 25%;
+            margin-left: auto;
+            left: auto;
+            right: auto;
+        }
+        .row .col {
+            float: left;
+            box-sizing: border-box;
+            padding: 0 0.75rem;
+            min-height: 1px;
+        }
+        .center, .center-align {
+            text-align: center;
+        }
+        .content{
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            background: #008171;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav">
+            <div class="row m0">
+                <div class="col s10 offset-s1">
+                    <ul>
+                        <li class="col s3 center active"><a href="#">闹钟</a></li>
+                        <li class="col s3 center"><a href="#">时钟</a></li>
+                        <li class="col s3 center"><a href="#">秒表</a></li>
+                        <li class="col s3 center"><a href="#">计时器</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="content">
+            <canvas width="300" height="300" id="myCanvas">
+                由于你的浏览器版本太低，不支持canvas!
+            </canvas>
+        </div>
+    </section>
+    <script>
+        window.onload = function(){
+        //获取画布
+        var oCanvas = document.getElementById("myCanvas");
+        //获取绘图环境
+        var oContext = oCanvas.getContext("2d");
+        drawClock();
+        var seconds = new Date().getSeconds()*6; //1秒6度
+        setInterval(function(){
+            drawClock(seconds);
+            seconds = seconds == 360 ? new Date().getSeconds()*6 : ++seconds;
+        },1000/6);
+        function drawClock(s){
+            oContext.clearRect(0, 0, 300, 300);
+
+
+            var nTime = new Date();
+            var hours = nTime.getHours();
+            var mins = nTime.getMinutes();
+
+
+
+            //绘制刻度
+            oContext.strokeStyle= '#999'; //笔触的颜色
+            oContext.lineWidth = 0.5; //笔触的宽度
+            for (var i = 0; i < 360; i++) {
+                oContext.save(); //保存当前环境状态
+                oContext.beginPath();  //开始新路径
+                oContext.translate(150, 150); //去到画布的中心,作为新的起点
+                oContext.rotate(i*Math.PI/180); //旋转角度
+                oContext.moveTo(0, -125); //移动笔触
+                oContext.lineTo(0, -140); //从当前位置画一根线到制定坐标
+                oContext.closePath(); //结束路径
+                oContext.stroke(); // 描边
+                oContext.restore() //保存之前保存过的路径和属性
+            }
+
+            //画里面的圆
+            oContext.strokeStyle= '#ccc'; //笔触的颜色
+            oContext.lineWidth = 0.5; //笔触的宽度
+            oContext.beginPath();  //开始新路径
+            oContext.arc(150, 150, 100, 0, Math.PI*2, false);
+            oContext.closePath(); //结束路径
+            oContext.stroke(); // 描边
+            oContext.save(); //保存当前环境状态
+
+            //画时针
+            oContext.strokeStyle= '#fff'; //笔触的颜色
+            oContext.lineWidth = 4; //笔触的宽度
+            oContext.beginPath();  //开始新路径
+            oContext.translate(150, 150); //去到画布的中心,作为新的起点
+            oContext.rotate(hours*30*Math.PI/180); //旋转角度
+            oContext.moveTo(0, 0); //移动笔触
+            oContext.lineTo(0, -60); //从当前位置画一根线到制定坐标
+            oContext.closePath(); //结束路径
+            oContext.stroke(); // 描边
+            oContext.restore() //保存之前保存过的路径和属性
+            oContext.save(); //保存当前环境状态
+
+            //画分针
+            oContext.strokeStyle= '#fff'; //笔触的颜色
+            oContext.lineWidth = 3; //笔触的宽度
+            oContext.beginPath();  //开始新路径
+            oContext.translate(150, 150); //去到画布的中心,作为新的起点
+            oContext.rotate(mins*6*Math.PI/180); //旋转角度
+            oContext.moveTo(0, 0); //移动笔触
+            oContext.lineTo(0, -80); //从当前位置画一根线到制定坐标
+            oContext.closePath(); //结束路径
+            oContext.stroke(); // 描边
+            oContext.restore() //保存之前保存过的路径和属性
+            oContext.save(); //保存当前环境状态
+
+            //画秒针（等边三角）
+            //
+            var height = 14 * Math.sin(Math.PI / 3);
+
+            oContext.fillStyle= '#fff'; //笔触的颜色
+            oContext.beginPath();  //开始新路径
+            oContext.translate(150, 150); //去到画布的中心,作为新的起点
+            oContext.rotate(s*Math.PI/180); //旋转角度
+            oContext.moveTo(0, -105 - height); //移动笔触
+            oContext.lineTo(-7,-105); //从当前位置画一根线到制定坐标
+            oContext.lineTo(7,-105); //从当前位置画一根线到制定坐标
+            oContext.closePath(); //结束路径
+            oContext.fill(); // 描边
+            oContext.restore() //保存之前保存过的路径和属性
+            oContext.save(); //保存当前环境状态
+
+            //画里面的空心圆
+            oContext.strokeStyle= '#fff'; //笔触的颜色
+            oContext.fillStyle= '#008171'; //笔触的颜色
+            oContext.lineWidth = 6; //笔触的宽度
+            oContext.beginPath();  //开始新路径
+            oContext.arc(150, 150, 3, 0, Math.PI*2, false);
+            oContext.closePath(); //结束路径
+            oContext.stroke(); // 描边
+            oContext.fill(); // 描边
+            oContext.save(); //保存当前环境状态
+
+
+            oContext.lineWidth = 0.5; //笔触的宽度
+            for(var i = 0; i < 100; i++){
+                oContext.save(); //保存当前环境状态
+                oContext.strokeStyle= 'rgba(255,255,255,' + (100-i)/100 + ')'; //笔触的颜色 用透明度
+                oContext.beginPath();  //开始新路径
+                oContext.translate(150, 150); //去到画布的中心,作为新的起点
+                oContext.rotate((s-i)*Math.PI/180); //旋转角度
+                oContext.moveTo(0, -125); //移动笔触
+                oContext.lineTo(0, -140); //从当前位置画一根线到制定坐标
+                oContext.closePath(); //结束路径
+                oContext.stroke(); // 描边
+                oContext.restore() //保存之前保存过的路径和属性
+            }
+
+
+        }
+    }
+    </script>
+</body>
+</html>

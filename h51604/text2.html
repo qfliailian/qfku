@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#btn1{
+			width: 36px;
+			height: 36px;
+			background: url('src/img/play.png') no-repeat;
+		}
+		#btn2{
+			width: 36px;
+			height: 36px;
+			background: url('src/img/vol.png') no-repeat;
+		}
+	</style>
+</head>
+<body>
+<video id="video1" src="http://www.runoob.com/try/demo_source/mov_bbb.mp4" autoplay="autoplay" controls="true" loop="true"></video>
+<button id="btn1"></button>
+<button id="btn2"></button>
+<script>
+	var oVideo = document.getElementById('video1');
+	var oBtn1 = document.getElementById('btn1');
+	var oBtn2 = document.getElementById('btn2');
+	oBtn1.onclick = function() {
+		if(oVideo.paused) {
+			oVideo.play();
+		}else{
+			oVideo.pause();
+		}
+	}
+
+	oBtn2.onclick = function() {
+		if(oVideo.muted) {
+			oVideo.muted = false;
+			oBtn2.style.background = 'url(src/img/vol.png)';
+		}else{
+			oVideo.muted = true;
+			oBtn2.style.background = 'url(src/img/novol.png)';
+		}
+	}
+</script>
+	
+</body>
+</html>
