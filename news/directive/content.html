@@ -1,0 +1,24 @@
+<div class='main'>
+	<ul>
+		<li ng-repeat='obj in arr'>
+		<a href="javascript:;" ng-url = 'obj.url' ng-click='turn($event,$index,obj.type?obj.type:obj.category)'>
+			<dl class='content'>
+				<dt><img ng-src='{{obj.thumbnail_pic_s}}' alt=""></dt>
+				<dd class="title"><h3>{{obj.title}}</h3><p><span>{{obj.date}}</span><ins>{{obj.author_name}}</ins></p></dd>
+			</dl>
+		</a>
+		</li>
+	</ul>
+</div>
+<style>
+	.main li{ height:0.8rem; margin:0.12rem 0 0.12rem 0.05rem; }
+	.main li a{display: block;}
+	.content{height:0.8rem;position: relative;}
+	.content dt{ display: inline; }
+	.content dt img{ width:1rem; height:0.8rem;}
+	.content dd{ width:2rem; float:right; font-size: 0.12rem; color:#000; margin-right: 0.05rem;
+		}
+	.content dd p{font-size: 0.12rem;margin:0.05rem 0; position: absolute; bottom: 0.02rem;}
+	.content dd p span{ margin-right:0.05rem; }
+	content dd h3{font-size: 0.16rem; font-weight: normal; height:0.36rem; overflow: hidden}
+</style>
